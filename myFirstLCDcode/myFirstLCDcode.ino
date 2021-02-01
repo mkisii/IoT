@@ -3,7 +3,7 @@
 
 
 LiquidCrystal lcd (2, 3, 4, 5, 6, 7); //RS, E,D4, D5, D6, D7
-// A to VDD, K to GND
+// A to VDD, K to GND, V0 t0 GND, 
 void setup(){
 
   lcd.begin(16,2);
