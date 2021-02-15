@@ -3,8 +3,16 @@
  *  The API is almost the same as with the WiFi Shield library, 
  *  the most obvious difference being the different file you need to include:
  */
-#include "ESP8266WiFi.h"
- 
+//#include "ESP8266WiFi.h"
+#include <SoftwareSerial.h>
+#include <WiFi.h>
+#define DEBUG true
+SoftwareSerial esp8266(9,10);
+
+#define SSID "TUK-WIFI"
+#define PASS "P@ssword@123" 
+
+int n;
 void setup() {
   Serial.begin(115200);
  

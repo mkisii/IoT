@@ -1,0 +1,5 @@
+pyFirmata==1.1.0
+pyformatter==0.0.1
+pyserial==3.5
+pythonpy==0.4.11
+PyYAML==3.12
