@@ -1,10 +1,15 @@
 
 #include <ESP8266WiFi.h>// library to help in communication
+#include "DHT.h" // including the Temperature Humidity module
+#define DHTTYPE DHT22
+#define DHTPIN D7 // defining the NodeMCU 
+DHT dht(DHTPIN, DHTTYPE);
+
 
 String apiKey = "P9TCMHR26IMX4T5F";     //  Enter your Write API key from ThingSpeak
 
 const char *ssid =  "My hotspot";     // replace with your wifi ssid and wpa2 key
-const char *pass =  "1234567890";
+const char *pass =  "1234567890"; // wifi Password
 const char *server = "api.thingspeak.com";
 
 
@@ -13,6 +18,7 @@ WiFiClient client;// instance of a connection
 void setup()
 {
   Serial.begin(115200); // board rate
+  dht.begin(); // initializing the DHT module
 
 
 
@@ -35,10 +41,36 @@ void setup()
 void loop()
 {
 
-  float h = 65;
-  float t = 30;
+  // Reading temperature or humidity takes about 250 milliseconds!
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  float h = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float t = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float f = dht.readTemperature(true);
 
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
 
+  // Compute heat index in Fahrenheit (the default)
+  float hif = dht.computeHeatIndex(f, h);
+  // Compute heat index in Celsius (isFahreheit = false)
+  float hic = dht.computeHeatIndex(t, h, false);
+
+  Serial.print(F("Humidity: "));
+  Serial.print(h);
+  Serial.print(F("%  Temperature: "));
+  Serial.print(t);
+  Serial.print(F("°C "));
+  Serial.print(f);
+  Serial.print(F("°F  Heat index: "));
+  Serial.print(hic);
+  Serial.print(F("°C "));
+  Serial.print(hif);
+  Serial.println(F("°F"));
 
   if (client.connect(server, 80))  //   "184.106.153.149" or api.thingspeak.com
   {
